@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heart Rate Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- For Graph -->
+    <style>
+        /* General Styles */
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            background: url('../image/contact.jpg');
+            background-attachment: fixed;
+            background-size: cover;
+            background-position: center;
+            overflow-x: hidden;
+            font-weight: 600;
+            color: white;
+        }
+
+        /* Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 50px;
+            background-color: rgba(0, 51, 102, 0.4);
+            height: 80px;
+            /* Fixed navbar height */
+            overflow: hidden;
+            /* Prevents content from expanding it */
+        }
+
+        .logo img {
+            height: 240px;
+            width: 250px;
+
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 20px;
+            padding: 0;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+            transition: color 0.3s ease-in-out;
+        }
+
+        nav a:hover {
+            color: #FFC107;
+        }
+
+        /* Dashboard */
+        .dashboard {
+    margin: 50px auto;
+    max-width: 600px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.02); /* Lighter transparency */
+    border-radius: 12px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.05);
+    backdrop-filter: blur(5px); /* Glass effect */
+}
+
+h1 {
+    color:white ;
+    font-size: 2rem;
+    text-shadow: 0 0 5px #6EA8FE, 0 0 10px #1E90FF;
+    animation: textGlow 1.5s infinite alternate ease-in-out;
+}
+
+/* Glow Animation */
+@keyframes textGlow {
+    0% { text-shadow: 0 0 5px #6EA8FE; }
+    100% { text-shadow: 0 0 15px #1E90FF; }
+}
+      
+        .heart-rate-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Heart Rate Display */
+        .card {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+            animation: fadeIn 1s ease-in-out;
+            text-align: center;
+            width: 80%;
+        }
+
+        #heart-rate {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #FF3B30;
+            margin-top: 10px;
+        }
+
+        /* ECG Pulse Line */
+        .pulse-line {
+            width: 100px;
+            height: 100px;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .pulse-svg {
+            width: 100%;
+            height: auto;
+            animation: pulse-move 1.5s infinite linear;
+        }
+
+        /* Move the Pulse Line */
+        @keyframes pulse-move {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-10px); }
+        }
+
+        /* Fade-in Animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Graph */
+        .chart-container {
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        /* Footer */
+        footer {
+            padding: 15px;
+            background-color: rgba(0, 0, 0, 0.8);
+            text-align: center;
+            position: relative;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        footer p {
+            color: white;
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Header -->
+<header>
+    <div class="logo">
+        <img src="../image/logo.png" alt="LifeSync Logo">
+    </div>
+    <nav>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="login.html">Login</a></li>
+            <li><a href="dashboard.html">Dashboard</a></li>
+            <li><a href="history.html">History</a></li>
+            <li><a href="contact.html">About</a></li>
+        </ul>
+    </nav>
+</header>
+
+<!-- Dashboard -->
+<div class="dashboard">
+    <h1>Heart Rate Monitoring System</h1>
+    <div class="heart-rate-container">
+        
+        <!-- ECG Pulse Line -->
+        <div class="pulse-line">
+            <svg viewBox="0 0 100 20" class="pulse-svg">
+                <polyline points="0,10 10,10 15,0 20,20 25,10 35,10 40,10 50,10 55,5 60,15 65,10 75,10 100,10"
+                    stroke="#A52A2A" stroke-width="2" fill="none" stroke-linejoin="round"/>
+            </svg>
+        </div>
+
+        <!-- Heart Rate Display -->
+        <div class="card">
+            <h2>Current Heart Rate</h2>
+            <div id="heart-rate">-- BPM</div>
+        </div>
+        <div class="chart-container">
+            <canvas id="heartRateChart"></canvas>
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer>
+    <p>© 2025 LifeSync | All Rights Reserved.</p>
+</footer>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const heartRateElement = document.getElementById("heart-rate");
+        let heartRateData = [];
+        let timeLabels = [];
+        let timeCounter = 0;
+
+        // Initialize Chart
+        const ctx = document.getElementById("heartRateChart").getContext("2d");
+        const heartRateChart = new Chart(ctx, {
+            type: "line",
+            data: {
+                labels: timeLabels,
+                datasets: [{
+                    label: "Heart Rate (BPM)",
+                    data: heartRateData,
+                    borderColor: "#FF3B30",
+                    borderWidth: 2,
+                    fill: false,
+                    pointRadius: 3,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: { beginAtZero: false, suggestedMin: 50, suggestedMax: 120 }
+                }
+            }
+        });
+
+        // Simulated Heart Rate Data for testing without hardware integration below this is for real time testing 
+        function updateHeartRate() {
+            const randomHeartRate = Math.floor(Math.random() * (100 - 60) + 60);
+            heartRateElement.textContent = `${randomHeartRate} BPM`;
+
+            // Update Graph
+            heartRateData.push(randomHeartRate);
+            timeLabels.push(++timeCounter + "s");
+            if (heartRateData.length > 10) {
+                heartRateData.shift();
+                timeLabels.shift();
+            }
+            heartRateChart.update();
+
+            // Adjust Pulse Animation Speed
+            document.querySelector(".pulse-svg").style.animationDuration = `${Math.max(0.5, 2 - (randomHeartRate - 60) / 40)}s`;
+        } 
+
+        // remove above part and add below for real time testing after hardware integration
+        /*
+       function updateHeartRate() {
+    fetch('http://10.20.44.154:3000/data') // actual IP & port of pc and frontend is on this pc so no problem 
+        .then(response => response.json())
+        .then(data => {
+            const heartRate = data.heartRate;
+            heartRateElement.textContent = `${heartRate} BPM`;
+
+            // Update Chart
+            heartRateData.push(heartRate);
+            timeLabels.push(++timeCounter + "s");
+
+            if (heartRateData.length > 10) {
+                heartRateData.shift();
+                timeLabels.shift();
+            }
+
+            heartRateChart.update();
+
+            // Adjust Pulse Animation Speed based on heart rate
+            document.querySelector(".pulse-svg").style.animationDuration = `${Math.max(0.5, 2 - (heartRate - 60) / 40)}s`;
+        })
+        .catch(error => {
+            console.error("Error fetching heart rate:", error);
+            heartRateElement.textContent = `-- BPM`; // Fallback if fetch fails
+        });
+}
+*/
+
+
+        // Update every 3 seconds
+        setInterval(updateHeartRate, 3000);
+    });
+</script>
+
+</body>
+</html>
+

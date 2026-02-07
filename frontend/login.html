@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login & Registration</title>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            background: url('../image/login.jpg');
+            background-size: cover;
+            background-position: center center;
+            color: white;
+            font-weight: 600;
+        }
+
+        /* Navigation Bar */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 50px;
+            background-color: rgba(0, 51, 102, 0.4);
+            color: white;
+            height: 80px;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 20px;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: white;
+            font-size: 15px;
+            transition: color 0.3s ease-in-out;
+        }
+
+        nav a:hover {
+            color: #FFC107;
+        }
+
+        .logo img {
+            height: 240px;
+        }
+
+        /* Login/Register Form */
+        .container {
+            width: 40%;
+            margin: 100px auto;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            backdrop-filter: blur(5px);
+        }
+
+        .container h2 {
+            margin-bottom: 20px;
+            font-size: 40px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 15px;
+        }
+
+        .form-group input {
+            width: 80%;
+            border: none;
+            border-radius: 5px;
+            padding: 10px;
+            background-color: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(5px);
+            border: 1px solid white;
+        }
+
+        .form-group input:hover {
+            border-color: white;
+            background-color: rgba(255, 255, 255, 0.2);
+            transition: 0.3s ease-in-out;
+        }
+
+        input {
+            color: white;
+        }
+
+        .btn {
+            width: 80%;
+            padding: 10px;
+            background-color: #007bff;
+            border: none;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .btn:hover {
+            background: #002e84;
+        }
+
+        .toggle-link {
+            margin-top: 10px;
+            display: block;
+            cursor: pointer;
+            color: #007bff;
+        }
+
+        .toggle-link:hover {
+            color: #002e84;
+        }
+
+        /* Footer */
+        footer {
+            padding: 15px;
+            background-color: rgba(0, 0, 0, 0.8);
+            text-align: center;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+
+        footer p {
+            color: white;
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navigation Bar -->
+    <header>
+        <div class="logo">
+            <img src="../image/logo.png" alt="LifeSync Logo">
+        </div>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="login.html">Login</a></li>
+                <li><a href="dashboard.html">Dashboard</a></li>
+                <li><a href="history.html">History</a></li>
+                <li><a href="about.html">About</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Login / Register Form -->
+    <div class="container">
+        <h2 id="form-title">Login</h2>
+        <form id="authForm">
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" required>
+            </div>
+            <div class="form-group" id="confirmPasswordField" style="display: none;">
+                <label for="confirmPassword">Confirm Password</label>
+                <input type="password" id="confirmPassword">
+            </div>
+            <button type="submit" class="btn">Login</button>
+            <p class="toggle-link" onclick="toggleForm()">Don't have an account? Register here</p>
+        </form>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>© 2025 LifeSync | All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        let isLogin = true;
+
+        function toggleForm() {
+            const formTitle = document.getElementById("form-title");
+            const confirmPasswordField = document.getElementById("confirmPasswordField");
+            const authForm = document.getElementById("authForm");
+
+            isLogin = !isLogin;
+
+            if (isLogin) {
+                formTitle.innerText = "Login";
+                confirmPasswordField.style.display = "none";
+                authForm.querySelector(".btn").innerText = "Login";
+                document.querySelector(".toggle-link").innerText = "Don't have an account? Register here";
+            } else {
+                formTitle.innerText = "Register";
+                confirmPasswordField.style.display = "block";
+                authForm.querySelector(".btn").innerText = "Register";
+                document.querySelector(".toggle-link").innerText = "Already have an account? Login here";
+            }
+        }
+
+        document.getElementById("authForm").addEventListener("submit", async function (event) {
+            event.preventDefault();
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+            const url = isLogin ? "/login" : "/register";
+
+            if (!isLogin) {
+                const confirmPassword = document.getElementById("confirmPassword").value;
+                if (password !== confirmPassword) {
+                    alert("Passwords do not match.");
+                    return;
+                }
+            }
+
+            try {
+                const response = await fetch(url, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+                if (response.ok) {
+                    alert(data.message);
+                    if (isLogin) {
+                        window.location.href = "dashboard.html";
+                    } else {
+                        toggleForm();
+                    }
+                } else {
+                    alert(data.message || "An error occurred");
+                }
+            } catch (err) {
+                console.error("Error during form submission:", err);
+                alert("Something went wrong. Please try again.");
+            }
+        });
+    </script>
+</body>
+
+</html>

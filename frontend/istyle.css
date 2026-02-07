@@ -1,0 +1,261 @@
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    background-image: url("../image/back.jpg.jpeg");
+    background-size: cover; /* Ensures the image covers the whole screen */
+    background-position: center center; /* Centers the image */
+    background-attachment: fixed; /* Keeps the background fixed while scrolling */
+    overflow-x: hidden; /* Prevents unwanted horizontal scroll */
+
+}
+
+
+
+.logo img {
+    height: 240px;
+    width: 250px;
+    
+}
+
+header {
+    height: 80px; /* Fixed navbar height */
+    overflow: hidden; /* Prevents content from expanding it */
+}
+
+
+/* Navigation Bar */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 50px;
+    background-color: rgba(0, 51, 102, 0.4); /* Dark transparent background for contrast */
+    color: white;
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    color: white;
+    position: relative;
+}
+
+
+
+
+/* Heartbeat Animation */
+@keyframes heartbeat {
+    0%, 100% {
+        transform: scale(1) rotate(-45deg);
+    }
+    50% {
+        transform: scale(1.2) rotate(-45deg);
+    }
+}
+
+/* Navigation Links */
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+}
+
+nav a {
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+    transition: color 0.3s ease-in-out;
+}
+
+nav a:hover {
+    color: #FFC107;
+}
+/* Hero Section */
+.hero {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 50px;
+    padding: 80px;
+    background: rgba(255, 255, 255, 0); /* Semi-transparent white for contrast */
+}
+
+.text-content {
+    max-width: 500px;
+}
+
+h1 {
+    font-size: 2.5rem;
+    color: #0056b3;
+}
+
+p {
+    font-size: 1.2rem;
+    color: #D3D3D3;
+
+
+}
+
+
+
+/* CTA Button */
+.cta-btn {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 12px 25px;
+    background-color: #FF3B30;
+    color: white;
+    font-size: 1rem;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: 0.3s;
+}
+
+.cta-btn:hover {
+    background-color: #b82b23;
+    transform: scale(1.1);
+}
+
+/* Features Section */
+.features {
+    width: 100%;
+    position: relative;
+    padding: 50px;
+    background-color: rgba(0, 51, 102, 0.4); /* Dark transparent background for contrast */
+    color: white;
+    box-sizing: border-box; /* Ensures padding doesn't expand the width */
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.features h2 {
+    margin-bottom: 20px;
+}
+
+.feature-cards {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+.card {
+    padding: 15px;
+    background-color: white;
+    color: #0056b3;
+    font-weight: bold;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease-in-out;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+/* Extra Content */
+.extra-content {
+    padding: 80px 20px;
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.slide-in {
+    animation: slideIn 2s ease-in-out;
+}
+
+.zoom-in {
+    animation: zoomIn 2s ease-in-out;
+}
+
+.text-transform {
+    text-transform: uppercase; /* Converts text to uppercase */
+}
+
+
+/* Testimonials */
+.testimonials {
+    padding: 50px;
+}
+
+.testimonial-cards {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.testimonial {
+    padding: 15px;
+    background-color: rgba(255, 255, 255, 0.5); /* 50% transparent white */
+    color: black;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease-in-out;
+}
+
+.testimonial:hover {
+    transform: scale(1.05);
+}
+/* Footer */
+footer {
+    padding: 15px;
+   /* background-color: #343A40;*/
+        background-color: rgba(0, 0, 0, 0.8); /* Dark transparent background */
+        text-align: center;
+        position: relative;
+        width: 100%;
+    
+}
+footer p {
+    color: white; /* Ensures text is white */
+    font-size: 1.2rem; /* Adjust font size */
+    text-align: center; /* Center the text */
+}
+.animated-text {
+    animation: fadeIn 2s ease-in-out, textGlow 1.5s infinite alternate;
+
+}
+
+/* Animations */
+@keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+@keyframes textGlow {
+    0% { text-shadow: 0 0 5px rgba(255, 255, 255, 0.5); }
+    100% { text-shadow: 0 0 15px rgba(255, 255, 255, 0.9); }
+}
+
+@keyframes slideIn {
+    0% { transform: translateX(-100%); opacity: 0; }
+    100% { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes zoomIn {
+    0% { transform: scale(0.5); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+
+
+/* Initially hide elements */
+.slide-in, .zoom-in {
+    opacity: 0;
+    transform: translateY(20px); /* Slightly move down */
+    transition: opacity 1s ease, transform 1s ease;
+}
+
+/* When the element becomes visible, apply animation */
+.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+h2 {
+    color: #0056b3;
+}

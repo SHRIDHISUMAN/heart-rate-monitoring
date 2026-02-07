@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>History Page</title>
+    <style>
+        body {
+            font-family:Arial, Helvetica, sans-serif;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            background-image: url("../image/history.jpg");
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            overflow-x: hidden;
+            box-sizing: border-box;
+            color: white;
+            font-weight: 600;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo img {
+            height: 240px;
+            width: 250px;
+
+        }
+
+        .logo-heart {
+            width: 30px;
+            height: 30px;
+            background-color: red;
+            position: absolute;
+            left: -40px;
+            /* Position the heart before the logo text */
+            top: 50%;
+            transform: translateY(-50%) rotate(-45deg);
+            /* Position the heart vertically centered and rotated */
+            animation: heartbeat 1s infinite ease-in-out;
+        }
+
+        .logo-heart:before,
+        .logo-heart:after {
+            content: "";
+            width: 30px;
+            height: 30px;
+            background-color: red;
+            border-radius: 50%;
+            position: absolute;
+        }
+
+        .logo-heart:before {
+            top: -15px;
+            left: 0;
+        }
+
+        .logo-heart:after {
+            top: 0;
+            left: 15px;
+        }
+
+          /* Navigation Bar */
+          header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 50px;
+            background-color: rgba(0, 51, 102, 0.4);
+            /* Dark transparent background for contrast */
+            color: white;
+            height: 80px;
+            /* Fixed navbar height */
+            overflow: hidden;
+            /* Prevents content from expanding it */
+        }
+        main{
+            flex: 1;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 20px;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: white;
+            font-size: 15px;
+            transition: color 0.3s ease-in-out;
+        }
+
+        nav a:hover {
+            color: #FFC107;
+        }
+        h2{
+            font-size: 50px;
+        }
+
+        table {
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            background-color: #2727279a;
+        }
+
+        th,
+        td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+
+        th {
+            background-color: #0d356dbe;
+            color: white;
+        }
+        footer {
+            padding: 15px;
+            /* background-color: #343A40;*/
+            background-color: rgba(0, 0, 0, 0.8);
+            /* Dark transparent background */
+            text-align: center;
+            position: relative;
+            width: 100%;
+
+
+        }
+
+        footer p {
+            color: white;
+            /* Ensures text is white */
+            font-size: 1.2rem;
+            /* Adjust font size */
+            text-align: center;
+            /* Center the text */
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navigation Bar -->
+  <header>
+    <div class="logo">
+        <img src="../image/logo.png" alt="LifeSync Logo">
+  </div>
+    <nav>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="login.html">Login</a></li>
+            <li><a href="dashboard.html">Dashboard</a></li>
+            <li><a href="history.html">History</a></li>
+            <li><a href="about.html">About</a></li>
+        </ul>
+    </nav>
+</header>
+    <h2>Heart Rate History</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Timestamp</th>
+                <th>Heart Rate (BPM)</th>
+            </tr>
+        </thead>
+        <tbody id="historyTable"></tbody>
+    </table>
+    <footer>
+        <p>© 2025 LifeSync | All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        async function fetchHistory() {
+            try {
+                // 'https://jsonplaceholder.typicode.com/posts'   (dummy api inside fetch previuosly)
+                const response = await fetch('http://localhost:3000/history');// backend route
+                const data = await response.json();
+                const tableBody = document.getElementById("historyTable");
+
+                tableBody.innerHTML = "";
+                data.forEach(entry => {
+                    const row = `<tr>
+                                    <td>${new Date(entry.timestamp).toLocaleString()}</td>
+                                    <td>${entry.heartRate} BPM</td>
+                                </tr>`;
+                    tableBody.innerHTML += row;
+                });
+            } catch (error) {
+                console.error("Error fetching history:", error);
+            }
+        }
+        fetchHistory();
+    </script>
+</body>
+
+</html>
